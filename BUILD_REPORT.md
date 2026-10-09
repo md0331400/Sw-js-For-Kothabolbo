@@ -1,5 +1,11 @@
 # Build and static verification report
 
+## Follow-up boot-image audit — 2026-10-10
+
+**Outcome: BLOCKED — do not flash the existing ZIP.** The supplied GitHub Release API metadata identifies `boot.img` as 67,108,864 bytes and reports SHA-256 `cb110f4ff0f252af903a5c1adca5d49d8d33cc490afef529487f1d89fc6d2f30`. This is a GitHub-reported digest, **not a locally calculated or verified hash**. The provided release URL redirected to `release-assets.githubusercontent.com`, where the sandbox TLS connection failed (`SSL_ERROR_SYSCALL`). A Releases API asset request also returned a 302 redirect to that host. The incomplete download was removed. No local original boot-image backup exists.
+
+Consequently, this audit could not inspect the original image's header/version, page size, compressed kernel, ramdisk, embedded/appended DTB, recovery-DTBO, AVB metadata, or Magisk state, or compare its kernel/config/available modules to the candidate build. The exact source revision behind `g131f907` also remains unresolved. No rebuild or ZIP update was made in this follow-up; the prior archive below remains only a static candidate and is not approved for flashing. To continue, the exact 64 MiB `boot.img` bytes must be provided as a conversation attachment or another directly accessible input, and source/module-ABI compatibility must still be established.
+
 **Run date:** 2026-10-09 (UTC)
 **Target requested:** Xiaomi Redmi 7 (`onclite`), MIUI Global `11.0.2.0(QFLMIXM)`, Android 10, reported stock kernel `4.9.186-perf-g131f907`.
 

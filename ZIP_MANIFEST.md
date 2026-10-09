@@ -1,4 +1,6 @@
-# Final ZIP manifest
+# Manifest for prior static candidate — NOT FLASH-READY
+
+**Do not install `Redmi7_onclite_Kernel_Flashable.zip`.** This manifest describes the previously built archive only. Its structure was statically verified, but it was not audited against the supplied boot image because the download was blocked, and the exact source revision remains unresolved.
 
 `Redmi7_onclite_Kernel_Flashable.zip` contains:
 
@@ -16,7 +18,7 @@
 
 The ZIP deliberately contains no original `boot.img`, no ramdisk image, no prebuilt `dtbo`, `recovery`, `vendor_boot`, or `vbmeta` image, and no kernel modules. The installer reads the live boot image and requests writing only the by-name `boot` partition after its checks pass.
 
-## Verified archive
+## Prior archive identity and static checks
 
 - Archive size: **11,975,575 bytes**
 - Archive SHA-256: `58df6f662cce96d1106e406ecad30dc757027619ceb363d9d5fcd1ec013ae79f`
