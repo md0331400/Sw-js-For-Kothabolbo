@@ -1,0 +1,41 @@
+AVB audit transcript for backups/original/boot.img
+
+Input provenance: boot.img extracted from main-branch boot.zip; local SHA-256 cb110f4ff0f252af903a5c1adca5d49d8d33cc490afef529487f1d89fc6d2f30.
+Inspection tool: avbtool.py fetched from LineageOS/android_external_avb, branch lineage-23.2, GitHub blob deb704549ddc8ace6106425dcb9b1bfb993dbdd8.
+
+Command: python3 /tmp/avbtool.py info_image --image backups/original/boot.img
+
+Footer version:           1.0
+Image size:               67108864 bytes
+Original image size:      15218688 bytes
+VBMeta offset:            15220736
+VBMeta size:              704 bytes
+--
+Minimum libavb version:   1.0
+Header Block:             256 bytes
+Authentication Block:     0 bytes
+Auxiliary Block:          448 bytes
+Algorithm:                NONE
+Rollback Index:           0
+Flags:                    0
+Rollback Index Location:  0
+Release String:           'avbtool 1.1.0'
+Descriptors:
+    Hash descriptor:
+      Image Size:            15218688 bytes
+      Hash Algorithm:        sha256
+      Partition Name:        boot
+      Salt:                  00a22bda86e291059a837ebd3baa4193872cf215922b24f9a9a483073f12fc5c
+      Digest:                3193f936e928c7780bfecbd4d8f573619c04bea20e997c5c9461c291122be250
+      Flags:                 0
+    Prop: com.android.build.boot.os_version -> '10'
+    Prop: com.android.build.boot.security_patch -> '2021-03-01'
+    Prop: com.android.build.boot.security_patch -> '2021-03-01'
+
+Command: python3 /tmp/avbtool.py verify_image --image backups/original/boot.img
+
+Verifying image backups/original/boot.img using embedded public key
+vbmeta: Successfully verified footer and NONE vbmeta struct in backups/original/boot.img
+boot: Successfully verified sha256 hash of backups/original/boot.img for image of 15218688 bytes
+
+Interpretation: the footer structure and boot hash descriptor are internally consistent for the original bytes. Algorithm NONE with an empty authentication block means the embedded vbmeta has no cryptographic signature. A later audit of the separately supplied Drive vbmeta.img verified its SHA256_RSA2048 signature against its embedded public key and verified its external boot descriptor against these original bytes; see reports/google-drive-avb-verification.txt. The device's trust anchor/enforcement state and acceptance of a modified image remain unknown. No AVB metadata was changed.

@@ -1,0 +1,14 @@
+{
+  "result": "FILE_BACKED_HOST_TEST_PASS_NOT_RECOVERY_OR_DEVICE_TEST",
+  "shells_tested": ["bash", "dash"],
+  "candidate_sha256_expected_and_readback": "684d5f2f29ee0dfeb9519a007be99594a8ba9af7c57c1734dec3b0fc06a0495c",
+  "original_sha256_expected_and_backup": "cb110f4ff0f252af903a5c1adca5d49d8d33cc490afef529487f1d89fc6d2f30",
+  "fixture_partition_size": 67108864,
+  "operation": "Ran the shared installer write/backup helper under Bash and dash against separate temporary regular-file targets using the actual 64 MiB stock and candidate boot images.",
+  "backup_created_and_hash_verified": true,
+  "candidate_written_and_readback_hash_verified": true,
+  "failure_injection": "Separate synthetic 256 KiB fixture forced a partial candidate write failure; helper restored and verified the original file.",
+  "recovery_tested": false,
+  "block_device_tested": false,
+  "physical_device_tested": false
+}

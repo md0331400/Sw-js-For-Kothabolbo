@@ -2,8 +2,10 @@
 """Static integrity and target-safety checks for the onclite AnyKernel3 ZIP."""
 from __future__ import annotations
 
+import argparse
 import pathlib
 import re
+import struct
 import subprocess
 import sys
 import tempfile
@@ -60,10 +62,38 @@ def check_gzip_kernel(data: bytes, label: str) -> None:
         fail(f"{label} does not decompress to an arm64 Linux Image")
 
 
+def check_target_image(path: pathlib.Path, installer: str) -> tuple[int, int, int]:
+    data = path.read_bytes()
+    if len(data) < 44 or data[:8] != b"ANDROID!":
+        fail(f"target image is not a supported Android boot image: {path}")
+    # Header v0-v2 uses fixed offsets for component sizes and page/header versions.
+    kernel_size = struct.unpack_from("<I", data, 8)[0]
+    ramdisk_size = struct.unpack_from("<I", data, 16)[0]
+    page_size = struct.unpack_from("<I", data, 36)[0]
+    header_version = struct.unpack_from("<I", data, 40)[0]
+    if header_version not in (0, 1, 2):
+        fail(f"target boot header version {header_version} is unsupported by this installer")
+    if page_size < 512 or page_size & (page_size - 1):
+        fail(f"target boot image has invalid page size {page_size}")
+    if page_size + kernel_size > len(data):
+        fail("target boot image kernel extends past end of file")
+    if ramdisk_size == 0:
+        guard = 'abort "Expected boot ramdisk is missing. Refusing to replace boot.";'
+        if guard not in installer or installer.find(guard) > installer.find("flash_boot;"):
+            fail("zero-ramdisk target has no verified fail-closed installer guard")
+        print("TARGET PREFLIGHT: BLOCKED — ramdisk_size=0; installer is expected to abort before writing boot.")
+    else:
+        print(f"TARGET PREFLIGHT: header v{header_version}, page {page_size}, ramdisk {ramdisk_size} bytes.")
+        print("This is only a component preflight; it does not establish kernel/DTB, AVB, Magisk, or module compatibility.")
+    return header_version, page_size, ramdisk_size
+
+
 def main() -> int:
-    if len(sys.argv) != 2:
-        fail("usage: verify_zip.py <flashable.zip>")
-    archive = pathlib.Path(sys.argv[1]).resolve()
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("archive", type=pathlib.Path, help="candidate AnyKernel3 ZIP")
+    parser.add_argument("--target-image", type=pathlib.Path, help="optional live/original boot image for structural preflight")
+    args = parser.parse_args()
+    archive = args.archive.resolve()
     if not archive.is_file():
         fail(f"ZIP does not exist: {archive}")
 
@@ -148,10 +178,24 @@ def main() -> int:
                 if result.returncode:
                     fail(f"shell syntax error in {filename}: {result.stderr.strip()}")
 
-        print(f"ZIP OK: {archive.name}")
+        print(f"STATIC ZIP CHECKS PASSED (not flash approval): {archive.name}")
         print(f"Entries: {len(names)}; CRC: clean; device guard: onclite only")
         print("Installer: boot-only AnyKernel3 repack; no wipe/format or extra partition image")
         print("Kernel payload: gzip stream valid; installer requires and preserves the live DTB")
+        ramdisk_guard = 'abort "Expected boot ramdisk is missing. Refusing to replace boot.";'
+        if ramdisk_guard not in installer or installer.find(ramdisk_guard) > installer.find("flash_boot;"):
+            fail("installer does not fail closed on a zero-length/missing boot ramdisk")
+        print("Installer preflight: requires a non-empty ramdisk and aborts before flash_boot if it is missing.")
+        if args.target_image is not None:
+            if not args.target_image.is_file():
+                fail(f"target image does not exist: {args.target_image}")
+            _, _, target_ramdisk_size = check_target_image(args.target_image, installer)
+            if target_ramdisk_size == 0:
+                print("Overall result: BLOCKED for this target image; no device write was performed.")
+                return 1
+            print("Overall result: component preflight only; compatibility remains unverified.")
+        else:
+            print("Overall result: NOT FLASH-READY; no target image compatibility was assessed.")
     return 0
 
 

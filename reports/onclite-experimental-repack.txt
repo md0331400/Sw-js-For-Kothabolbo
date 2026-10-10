@@ -1,0 +1,36 @@
+{
+  "appended_fdt_count": 17,
+  "appended_fdt_tail_byte_identical": true,
+  "appended_fdt_tail_sha256": "4a5fd265b67b34a535b3bda15bb88568948d80154da15eab1dfaf7cc70268ca5",
+  "appended_fdt_tail_size": 4142961,
+  "avb": {
+    "device_acceptance": "unknown; an unlocked report is not proof of this bootloader's AVB error policy",
+    "footer_and_embedded_vbmeta_bytes_preserved": true,
+    "original_external_descriptor_digest": "3193f936e928c7780bfecbd4d8f573619c04bea20e997c5c9461c291122be250",
+    "original_external_descriptor_matches": true,
+    "repacked_body_matches_audited_original_external_descriptor": false,
+    "repacked_external_descriptor_digest": "81114a6048abd5c3e970134fe482204dcc201c7b36b24286e08dfec989844415",
+    "separate_external_vbmeta": "not an input to this tool and never written"
+  },
+  "body_size_preserved": true,
+  "candidate_boot_sha256": "684d5f2f29ee0dfeb9519a007be99594a8ba9af7c57c1734dec3b0fc06a0495c",
+  "candidate_partition_size": 67108864,
+  "header_preserved_except_kernel_size_and_legacy_id": true,
+  "header_version": 1,
+  "kernel_artifact_record": "2026-10-10 rebuild; same pinned source/toolchain/config",
+  "kernel_artifact_recorded_sha256": "255b8cf621055cc1ff48d256204f8690a6c9892047a40d0cb9cb2c838c23eb96",
+  "kernel_component_offset": 2048,
+  "kernel_component_size": 15193561,
+  "kernel_image_sha256": "6920a3f055bc2fc02b31652c37d2b886d63eba3aa47f95052f4a4aea848052dc",
+  "kernel_image_size": 28602880,
+  "kernel_payload_sha256": "255b8cf621055cc1ff48d256204f8690a6c9892047a40d0cb9cb2c838c23eb96",
+  "legacy_boot_id": "7143c42a094a0245568f1efdbc59232e97829219",
+  "page_size": 2048,
+  "ramdisk_size": 0,
+  "result": "STATIC_REPACK_VALIDATED_ONLY_NOT_BOOT_OR_FLASH_TESTED",
+  "stock_boot_sha256": "cb110f4ff0f252af903a5c1adca5d49d8d33cc490afef529487f1d89fc6d2f30",
+  "suffix_from_original_image_size_byte_identical": true,
+  "written_to_device": false
+}
+Wrote new static candidate only: /home/user/Sw-js-For-Kothabolbo/build-artifacts/onclite-experimental-boot.img
+AVB is not disabled or re-signed; no device acceptance or physical test is claimed.

@@ -1,0 +1,15 @@
+test_avb_digest_uses_salt_then_original_image_bytes (test_repack_onclite_boot.RepackOncliteBootTests.test_avb_digest_uses_salt_then_original_image_bytes) ... ok
+test_default_mode_rejects_unfingerprinted_synthetic_stock (test_repack_onclite_boot.RepackOncliteBootTests.test_default_mode_rejects_unfingerprinted_synthetic_stock) ... ok
+test_rejects_nonzero_original_page_padding (test_repack_onclite_boot.RepackOncliteBootTests.test_rejects_nonzero_original_page_padding) ... ok
+test_rejects_nonzero_ramdisk (test_repack_onclite_boot.RepackOncliteBootTests.test_rejects_nonzero_ramdisk) ... ok
+test_rejects_payload_trailing_data (test_repack_onclite_boot.RepackOncliteBootTests.test_rejects_payload_trailing_data) ... ok
+test_rejects_recovery_dtbo_layout (test_repack_onclite_boot.RepackOncliteBootTests.test_rejects_recovery_dtbo_layout) ... ok
+test_rejects_unexpected_fdt_count (test_repack_onclite_boot.RepackOncliteBootTests.test_rejects_unexpected_fdt_count) ... ok
+test_strict_kernel_gate_rejects_untracked_payload (test_repack_onclite_boot.RepackOncliteBootTests.test_strict_kernel_gate_rejects_untracked_payload) ... ok
+test_synthetic_v1_repack_preserves_header_fdt_and_avb_suffix (test_repack_onclite_boot.RepackOncliteBootTests.test_synthetic_v1_repack_preserves_header_fdt_and_avb_suffix) ... ok
+test_writer_never_overwrites_an_existing_path (test_repack_onclite_boot.RepackOncliteBootTests.test_writer_never_overwrites_an_existing_path) ... ok
+
+----------------------------------------------------------------------
+Ran 10 tests in 0.079s
+
+OK

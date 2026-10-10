@@ -1,0 +1,144 @@
+Google Drive firmware AVB verification log
+
+Tool: avbtool.py from LineageOS/android_external_avb, lineage-23.2, blob deb704549ddc8ace6106425dcb9b1bfb993dbdd8.
+
+Command: python3 /tmp/avbtool.py info_image --image google_drive/vbmeta.img
+Minimum libavb version:   1.0
+Header Block:             256 bytes
+Authentication Block:     320 bytes
+Auxiliary Block:          2816 bytes
+Public key (sha1):        b2a02f1e56e366d727a1a8e089762fe0b91bbc84
+Algorithm:                SHA256_RSA2048
+Rollback Index:           0
+Flags:                    0
+Rollback Index Location:  0
+Release String:           'avbtool 1.1.0'
+Descriptors:
+    Prop: com.android.build.vendor.os_version -> '10'
+    Prop: com.android.build.vendor.security_patch -> '2021-03-01'
+    Prop: com.android.build.vendor.security_patch -> '2021-03-01'
+    Prop: com.android.build.boot.os_version -> '10'
+    Prop: com.android.build.boot.security_patch -> '2021-03-01'
+    Prop: com.android.build.boot.security_patch -> '2021-03-01'
+    Prop: com.android.build.system.os_version -> '10'
+    Prop: com.android.build.system.security_patch -> '2021-03-01'
+    Prop: com.android.build.system.security_patch -> '2021-03-01'
+    Kernel Cmdline descriptor:
+      Flags:                 1
+      Kernel Cmdline:        'dm="1 vroot none ro 1,0 7224056 verity 1 PARTUUID=$(ANDROID_SYSTEM_PARTUUID) PARTUUID=$(ANDROID_SYSTEM_PARTUUID) 4096 4096 903007 903007 sha1 4e9a52aa3d43a727f473ba37a246b27c3afe5df4 b72b97c08885e13bcc40adc38e3df0d21eee6035 10 $(ANDROID_VERITY_MODE) ignore_zero_blocks use_fec_from_device PARTUUID=$(ANDROID_SYSTEM_PARTUUID) fec_roots 2 fec_blocks 910119 fec_start 910119" root=/dev/dm-0'
+    Kernel Cmdline descriptor:
+      Flags:                 2
+      Kernel Cmdline:        'root=PARTUUID=$(ANDROID_SYSTEM_PARTUUID)'
+    Hash descriptor:
+      Image Size:            15218688 bytes
+      Hash Algorithm:        sha256
+      Partition Name:        boot
+      Salt:                  00a22bda86e291059a837ebd3baa4193872cf215922b24f9a9a483073f12fc5c
+      Digest:                3193f936e928c7780bfecbd4d8f573619c04bea20e997c5c9461c291122be250
+      Flags:                 0
+    Hash descriptor:
+      Image Size:            955953 bytes
+      Hash Algorithm:        sha256
+      Partition Name:        dtbo
+      Salt:                  cd06bb8f38f9c8c66e29eccd41d20d9326b680ebf0c2902d2cafa5224d506001
+      Digest:                a21f185842b7df99b37cb81b8b3652a9f2b14ad37932fd0dc0fc80069617d1c7
+      Flags:                 0
+    Hash descriptor:
+      Image Size:            27971584 bytes
+      Hash Algorithm:        sha256
+      Partition Name:        recovery
+      Salt:                  3ad93c511ad50e31d04e9e039a7e07c776714e74395269c0523328477d6a0003
+      Digest:                5278b9bd2e101728b7077a679f603e111dfe9bf28a623b267dd7a77f624076d4
+      Flags:                 0
+    Hashtree descriptor:
+      Version of dm-verity:  1
+      Image Size:            3698716672 bytes
+      Tree Offset:           3698716672
+      Tree Size:             29130752 bytes
+      Data Block Size:       4096 bytes
+      Hash Block Size:       4096 bytes
+      FEC num roots:         2
+      FEC offset:            3727847424
+      FEC size:              29474816 bytes
+      Hash Algorithm:        sha1
+      Partition Name:        system
+      Salt:                  b72b97c08885e13bcc40adc38e3df0d21eee6035
+      Root Digest:           4e9a52aa3d43a727f473ba37a246b27c3afe5df4
+      Flags:                 0
+    Hashtree descriptor:
+      Version of dm-verity:  1
+      Image Size:            1056714752 bytes
+      Tree Offset:           1056714752
+      Tree Size:             8327168 bytes
+      Data Block Size:       4096 bytes
+      Hash Block Size:       4096 bytes
+      FEC num roots:         2
+      FEC offset:            1065041920
+      FEC size:              8421376 bytes
+      Hash Algorithm:        sha1
+      Partition Name:        vendor
+      Salt:                  e64dfe6d72b11490605b5c3f0e9eb4f945709f79
+      Root Digest:           9bcc7a2f61ad36b258c595204d288a2e97133dac
+      Flags:                 0
+
+Command: python3 /tmp/avbtool.py info_image --image google_drive/dtbo.img
+Footer version:           1.0
+Image size:               8388608 bytes
+Original image size:      955953 bytes
+VBMeta offset:            958464
+VBMeta size:              512 bytes
+--
+Minimum libavb version:   1.0
+Header Block:             256 bytes
+Authentication Block:     0 bytes
+Auxiliary Block:          256 bytes
+Algorithm:                NONE
+Rollback Index:           0
+Flags:                    0
+Rollback Index Location:  0
+Release String:           'avbtool 1.1.0'
+Descriptors:
+    Hash descriptor:
+      Image Size:            955953 bytes
+      Hash Algorithm:        sha256
+      Partition Name:        dtbo
+      Salt:                  cd06bb8f38f9c8c66e29eccd41d20d9326b680ebf0c2902d2cafa5224d506001
+      Digest:                a21f185842b7df99b37cb81b8b3652a9f2b14ad37932fd0dc0fc80069617d1c7
+      Flags:                 0
+
+Command: python3 /tmp/avbtool.py verify_image --image google_drive/boot.img
+Verifying image google_drive/boot.img using embedded public key
+vbmeta: Successfully verified footer and NONE vbmeta struct in google_drive/boot.img
+boot: Successfully verified sha256 hash of google_drive/boot.img for image of 15218688 bytes
+
+Command: python3 /tmp/avbtool.py verify_image --image google_drive/dtbo.img
+Verifying image google_drive/dtbo.img using embedded public key
+vbmeta: Successfully verified footer and NONE vbmeta struct in google_drive/dtbo.img
+dtbo: Successfully verified sha256 hash of google_drive/dtbo.img for image of 955953 bytes
+
+Command: python3 /tmp/avbtool.py verify_image --image google_drive/vbmeta.img
+Verifying image google_drive/vbmeta.img using embedded public key
+vbmeta: Successfully verified SHA256_RSA2048 vbmeta struct in google_drive/vbmeta.img
+boot: Successfully verified sha256 hash of google_drive/boot.img for image of 15218688 bytes
+dtbo: Successfully verified sha256 hash of google_drive/dtbo.img for image of 955953 bytes
+Traceback (most recent call last):
+  File "/tmp/avbtool.py", line 5509, in <module>
+    tool.run(sys.argv)
+  File "/tmp/avbtool.py", line 5263, in run
+    args.func(args)
+  File "/tmp/avbtool.py", line 5417, in verify_image
+    self.avb.verify_image(args.image.name, args.key,
+  File "/tmp/avbtool.py", line 2621, in verify_image
+    elif not desc.verify(image_dir, image_ext, expected_chain_partitions_map,
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/avbtool.py", line 1717, in verify
+    image = ImageHandler(image_filename, read_only=True)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/avbtool.py", line 790, in __init__
+    self._read_header()
+  File "/tmp/avbtool.py", line 805, in _read_header
+    self._image = open(self.filename, 'rb')
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: 'google_drive/recovery.img'
+Overall exit status: 1
+Reason: missing google_drive/recovery.img (the first unprovided hash-descriptor image); no dummy partition was supplied.

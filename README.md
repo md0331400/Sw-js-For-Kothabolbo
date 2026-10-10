@@ -1,79 +1,56 @@
-# Redmi 7 (onclite) kernel — MIUI Global Android 10
+# Redmi 7 (`onclite`) kernel candidate — MIUI Global Android 10
 
-This repository builds **`Redmi7_onclite_Kernel_Flashable.zip`** for the Xiaomi Redmi 7, codename **`onclite`**, targeting MIUI Global Stable **`11.0.2.0(QFLMIXM)`**, Android 10, Linux **4.9.186**. It is not for Redmi 7A, Redmi Note 7, or Redmi Y3 (`onc`).
+> **BLOCKED — DO NOT FLASH `Redmi7_onclite_Kernel_Flashable.zip`.** The supplied original image is audited. It has a zero-length ramdisk, while the candidate installer requires a non-empty ramdisk and will abort before writing. Exact stock-source provenance, module ABI, AVB acceptance, and Magisk state remain unresolved. A separate diagnostic build's config comparison is documented below; it does not approve the ZIP. The archive remains unchanged, a static candidate—not a release.
 
-> **BLOCKED — DO NOT FLASH.** The repository ZIP is a prior static-build candidate, **not a flash-ready release**. The supplied original `boot.img` could not be downloaded into this workspace: GitHub redirected the asset request to `release-assets.githubusercontent.com`, which this environment cannot reach. Therefore its header, kernel, ramdisk, DTB/DTBO, and Magisk state have not been inspected, and no local backup copy was created. The Xiaomi source commit corresponding to `g131f907` is also unverified. The existing candidate must not be flashed until both source and boot-image compatibility are audited.
+This project targets the Xiaomi Redmi 7 (`onclite`) and the requested MIUI Global `11.0.2.0(QFLMIXM)` / Android 10 context. The contents of the supplied boot image alone do **not** prove that the physical device or exact ROM matches those labels. Do not confuse `onclite` with Redmi 7A, Redmi Note 7, or Redmi Y3 (`onc`). A kernel defconfig filename is not device-identification evidence.
 
-## Original boot-image audit status
+## Original boot image and audit
 
-The user-provided [GitHub Release asset](https://github.com/md0331400/Sw-js-For-Kothabolbo/releases/download/Boot/boot.img) is listed by GitHub's Releases API as **67,108,864 bytes** with API-reported SHA-256 `cb110f4ff0f252af903a5c1adca5d49d8d33cc490afef529487f1d89fc6d2f30`. This digest is GitHub metadata only; it was **not independently calculated** because the binary download redirected to a host unavailable in this environment. No header/layout, kernel, ramdisk, DTB/DTBO, or Magisk inspection was possible, and the original was not copied into the workspace. Do not treat the API digest as local backup verification.
+The original was obtained from `boot.zip` on this repository's `main` branch. The archive's Git blob ID matched the GitHub tree, the inner ZIP passed integrity checks and contains only `boot.img`, and the extracted image SHA-256 matches the GitHub Releases API digest.
 
-To continue, the exact 64 MiB `boot.img` bytes must be made available as a conversation attachment or another directly accessible input. The exact Xiaomi source commit behind `g131f907` and module ABI compatibility must also be established. Until then, the ZIP remains only a static candidate.
+- Local byte-for-byte backup: `backups/original/boot.img` (**ignored by Git; not included in the candidate ZIP**).
+- Size: **67,108,864 bytes**; SHA-256: `cb110f4ff0f252af903a5c1adca5d49d8d33cc490afef529487f1d89fc6d2f30`.
+- Header: Android boot header **v1**, 2048-byte page, 1648-byte header; kernel component 15,214,803 bytes; ramdisk 0; second stage 0; recovery-DTBO 0. There is no separate v2 DTB field; the kernel component contains a gzip `Image` followed by appended FDT data.
+- Kernel release: `4.9.186-perf-g131f907`; build string says GCC 4.9.x 20150123 and 9 March 2021. The release string is not proof of source revision, configuration equivalence, or ABI equivalence.
+- The appended data contains **17 structurally valid FDTs**, including Qualcomm SDM632/PMI632 and other reference SoC trees. The Google Drive `dtbo.img` was also inspected: it has an Android DT table with 17 generic Qualcomm overlays, but none establishes which onclite board tree/overlay the bootloader selects.
+- Android AVB properties report Android 10 and security patch `2021-03-01`; they do not identify the exact MIUI build or physical device.
 
-## Source and change
+The Drive folder also contains an external `vbmeta.img`. Its `SHA256_RSA2048` signature verifies against the embedded public key, and its boot and DTBO hash descriptors verify against these exact supplied images. The boot image's embedded AVB footer is v1.0 with `Algorithm: NONE` and a zero-byte authentication block; this internal hash is not a cryptographic signature. The external signed vbmeta covers the original boot bytes, so changing the kernel while leaving vbmeta unchanged will not match that descriptor if the device enforces it. The bootloader's trust anchor and enforcement state remain unknown; no AVB metadata was changed. Full vbmeta verification stops at the missing `recovery.img`; system/vendor hashtrees were not verified.
 
-- Official Xiaomi source: [`MiCode/Xiaomi_Kernel_OpenSource`, `onc-q-oss`](https://github.com/MiCode/Xiaomi_Kernel_OpenSource/tree/onc-q-oss)
-- Pinned source commit: [`fa577bc566886db1e0dfb1ddf66ff7c528148b2b`](https://github.com/MiCode/Xiaomi_Kernel_OpenSource/commit/fa577bc566886db1e0dfb1ddf66ff7c528148b2b). Xiaomi's commit message identifies Android Q kernel changes for Redmi Y3 and Redmi 7, lists `onclite-perf_defconfig`, and is based on Qualcomm `LA.UM.8.6.2.r1-04900-89xx.0`.
-- Kernel Makefile version: `4.9.186`; device configuration: `arch/arm64/configs/onclite-perf_defconfig`.
-- Change: keep `CONFIG_MODULE_SIG=y` and SHA-512 verification, but unset `CONFIG_MODULE_SIG_FORCE`. Unsigned modules and signatures for which the kernel has no trusted key may then pass this policy check and taint the kernel; a cryptographically invalid signature still fails verification, and other module checks remain in place. The one-line patch is in [`patches/`](patches/0001-onclite-disable-module-signature-enforcement.patch).
-- Toolchain: AArch64 Google Android GCC 4.9 prebuilt, mirrored by [LineageOS](https://github.com/LineageOS/android_prebuilts_gcc_linux-x86_aarch64_aarch64-linux-android-4.9/tree/lineage-19.1), pinned in `scripts/build.sh`. The release string is deliberately set to the currently reported `4.9.186-perf-g131f907` for module vermagic compatibility; this string is **not** evidence that source commit `g131f907` is in the public Xiaomi source. The exact stock source revision and module CRCs remain unverified.
+The boot header reports **no ramdisk**. There is therefore no ramdisk cpio to inspect for Magisk markers. No obvious Magisk marker strings were found in the raw image, decompressed kernel, or appended FDT data; this cannot establish that the phone is unrooted or rooted, because Magisk could be installed through another image or partition. Root preservation cannot be promised from this input.
 
-The reference [onclite device tree](https://github.com/onclite/android_device_xiaomi_onclite/blob/lineage-22.1/BoardConfig.mk) describes an arm64 `Image.gz-dtb`, 2048-byte kernel page size, boot header v1, separate DTBO, 64 MiB boot partition, and a non-A/B layout. That is corroborating device-tree evidence, **not** a substitute for inspecting this exact MIUI build's original `boot.img`. Accordingly, the installer requires and reuses the DTB extracted from the live image instead of guessing a board DTS from the Qualcomm source tree. The recovery fstab names the `boot` partition separately from `recovery` ([fstab](https://github.com/onclite/android_device_xiaomi_onclite/blob/lineage-22.1/rootdir/etc/fstab.qcom)).
+Detailed results are in [`BUILD_REPORT.md`](BUILD_REPORT.md), [`reports/google-drive-image-audit.md`](reports/google-drive-image-audit.md), [`reports/onclite-boot-audit.json`](reports/onclite-boot-audit.json), [`reports/avb-original-boot.txt`](reports/avb-original-boot.txt), [`reports/google-drive-avb-verification.txt`](reports/google-drive-avb-verification.txt), and [`reports/zip-verification.txt`](reports/zip-verification.txt). The boot inspector is [`scripts/inspect_boot.py`](scripts/inspect_boot.py), the static kernel/FDT-layout checker is [`scripts/validate_kernel_artifact.py`](scripts/validate_kernel_artifact.py), and the static/target-aware ZIP verifier is [`scripts/verify_zip.py`](scripts/verify_zip.py). Original and Drive-staged images stay local and ignored; do not add them to Git or any release.
 
-## Prior candidate's intended installer flow — not target-validated
+## Source, configuration, toolchain, and ABI findings
 
-The following describes static code behavior only; the supplied boot image could not be inspected and the candidate must not be flashed.
+The existing ZIP's historical candidate was built from Xiaomi's `onc-q-oss` source pinned at `fa577bc566886db1e0dfb1ddf66ff7c528148b2b`, using `onclite-perf_defconfig` and an Android AArch64 GCC 4.9 toolchain; that archive remains unchanged. A separate **kernel-only diagnostic build** now uses `onc-perf_defconfig` and is not included in any ZIP. Xiaomi's pinned commit is relevant, but the exact revision that produced stock `g131f907` has not been established: GitHub's commit API found no `131f907` commit in the Xiaomi repository.
 
-- Checks the recovery-reported product is exactly `onclite`.
-- Resolves and checks a partition whose by-name name is exactly `boot`; checks the live boot image can be unpacked and contains a ramdisk before any write.
-- Stages only the built `Image.gz` kernel. For header v0/v1, requires MagiskBoot to extract the live appended DTB as `kernel_dtb`; for header v2, requires the live separate `dtb`. AnyKernel3/MagiskBoot repacks the new kernel with those original live DTB bytes, along with the original ramdisk and recovery-DTBO section. It aborts if the expected DTB cannot be extracted, or for unsupported header versions.
-- Uses AnyKernel3/MagiskBoot to repack the **live** boot image. The ZIP contains no prebuilt `boot.img`; it does not request writes to `recovery`, `dtbo`, `vendor_boot`, `vbmeta`, system, or userdata. It does not format or wipe anything.
-- Skips ramdisk editing and leaves `PATCH_VBMETA_FLAG=0`. AnyKernel3 detects a Magisk-patched ramdisk and applies its kernel-side Magisk preservation handling. This is an expectation based on the installer code, **not a guarantee** of root preservation; the actual Magisk version and boot image were unavailable for inspection.
+The original kernel has an embedded 5,009-line config (`IKCONFIG`). It reports `CONFIG_MODULES=y`, `CONFIG_MODVERSIONS=y`, `CONFIG_MODULE_SIG=y`, `CONFIG_MODULE_SIG_FORCE=y`, and SHA-512 module signatures. Comparing the two pinned defconfigs to stock makes `onc-perf_defconfig` the stronger reference: zero assignment-value mismatches (six defconfig entries absent) versus six mismatches (and eleven entries absent) for `onclite-perf_defconfig`. This is configuration evidence, **not proof that the phone is an `onc` device**. The final diagnostic config restored stock `CONFIG_TASK_DELAY_ACCT=y` and `CONFIG_SOCKEV_NLMCAST=y`, which the upstream defconfig omits. Its full generated config (SHA-256 `f3d8d3b08369b0c433e6e7106447df4176df010659537d50652a60f50547660e`) differs from stock only at `CONFIG_MODULE_SIG_FORCE` among symbols supported by the pinned source; stock-only `CONFIG_KTRACE` and `CONFIG_RTMM` have no Kconfig declarations there. Exact source revision and target identity remain unresolved. See [`reports/diagnostic-kernel-build.md`](reports/diagnostic-kernel-build.md) for the full diff.
 
-The recovery must support the legacy update-binary ZIP format (as current TWRP/OrangeFox builds generally do). Flash it as a **ZIP**, not as an image. This package does not sign the modified boot with Xiaomi's key, patch vbmeta, or disable AVB; use it only where the bootloader/recovery setup already permits a custom boot image. If recovery reports an updater/format error or the installer aborts a preflight check, do not force the flash.
+The existing ZIP's payload intentionally unsets `CONFIG_MODULE_SIG_FORCE`; its historical build also disables automatic local-version suffixing and manually sets `-g131f907`, while stock has `CONFIG_LOCALVERSION_AUTO=y`. That spoofed label does not reproduce source or ABI. The new diagnostic build keeps `CONFIG_LOCALVERSION_AUTO=y`, reports `4.9.186-perf-gfa577bc5-dirty`, and changes only forced-signature policy among supported stock config symbols. `CONFIG_MODVERSIONS=y` remains enabled. Matching release labels alone cannot establish module compatibility: symbol CRCs, the exact `Module.symvers`, and matching `.ko` files are needed. Drive contains `vendor.img`, but it is 926,327,184 bytes—over the connector's 100 MB download limit—so no modules or `Module.symvers` were read. No module was loaded on a phone.
 
-## Build
+The stock GCC banner and the pinned compiler's `4.9.x 20150123 (prerelease)` text agree, but the stock compiler binary cannot be recovered from that banner. The diagnostic compiler binary SHA-256 is `d6feb5d499457af0e4ed41d45e008e61dc69a6b644940686703f2e8386461049`; identical stock compiler/build inputs remain unproven. The separate diagnostic `Image.gz` is 11,050,592 bytes (SHA-256 `e177c6841bc8150d9488b2fc80127c91b169a15f19be47d9467747d3a8af54d5`), with release `4.9.186-perf-gfa577bc5-dirty`; it is not the old ZIP kernel payload or evidence of matching stock binary/ABI. Its local artifact and full metadata are under the ignored `build-artifacts/onclite-kernel-only-stock-config/` directory.
 
-Run from Linux with Git, Bash, Make, a host C compiler, Python 3, `zip`, gzip, OpenSSL development headers/library, and enough disk/RAM. The script fetches pinned Xiaomi source, the pinned AArch64 GCC 4.9 prebuilt, and pinned AnyKernel3 framework into a temporary directory, builds outside the repository, verifies the ZIP, and removes its temporary work directory. It uses an installed `bc` when available; otherwise it builds pinned bc 7.1.0 in the temporary directory. On modern GCC hosts it passes `-fcommon` for this legacy kernel's generated DTC code. It builds only `Image.gz`, not a guessed DTB: the installer code requires and carries through a DTB extracted from the live boot image, a path not yet verified against the supplied target image. It does not fetch or publish a stock boot image. **The existing script output is not cleared for flashing**; the target image and exact matching source revision must be verified first.
+## Candidate ZIP and installer result
+
+The existing `Redmi7_onclite_Kernel_Flashable.zip` is unchanged. Static archive, CRC, shell syntax, payload-format, path-safety, and installer-guard checks pass. That is **not** target or boot verification.
+
+The candidate's kernel has the same `4.9.186-perf-g131f907` release string as the original, but the uncompressed images differ: candidate 28,570,112 bytes; stock 28,606,976 bytes; 21,595,768 differing bytes across their common range, first difference at byte 17. A matching release label cannot cure the unresolved source/config/ABI differences.
+
+The installer checks for a non-empty live ramdisk and aborts if none is found. The audited image has `ramdisk_size=0`, so the candidate's expected behavior for this image is a **fail-closed abort before `flash_boot`**. The target-aware verifier reports a blocked result (exit status 1) for this image. Do not bypass the guard or modify it to force installation. The package also carries no image from which to recover the missing ramdisk, no original `boot.img`, no DTBO, no `vbmeta`, and no modules.
+
+## Build and verification
+
+The completed kernel-only build, exact commands, compiler identity, config delta, artifact hashes, and static FDT/layout checks are documented in [`reports/diagnostic-kernel-build.md`](reports/diagnostic-kernel-build.md) and [`BUILD_REPORT.md`](BUILD_REPORT.md). `scripts/build.sh` now builds only a diagnostic kernel and never packages a ZIP; its output is Git-ignored. The static inventory for the unchanged blocked archive is in [`ZIP_MANIFEST.md`](ZIP_MANIFEST.md). The successful host build does not resolve the source-revision, module-ABI, zero-ramdisk installer, or AVB blockers.
 
 ```sh
-chmod +x scripts/build.sh
-JOBS=2 ./scripts/build.sh
+python3 scripts/inspect_boot.py backups/original/boot.img
 python3 scripts/verify_zip.py Redmi7_onclite_Kernel_Flashable.zip
+python3 scripts/verify_zip.py Redmi7_onclite_Kernel_Flashable.zip --target-image backups/original/boot.img
 ```
 
-`JOBS` may be adjusted for the build host. To use a locally installed cross compiler, set `CROSS_COMPILE=/path/to/aarch64-linux-android-` (including the trailing dash). The build uses `onclite-perf_defconfig`, sets `LOCALVERSION=-g131f907` and disables automatic Git suffixing solely to keep the reported kernel release aligned with the installed kernel's vermagic. That release label does not verify the source or module CRCs. The actual source commit and build artifacts are recorded separately in [`BUILD_REPORT.md`](BUILD_REPORT.md).
+The last command intentionally exits non-zero and reports **BLOCKED** because the supplied target has no ramdisk. None of these commands flashes or writes to a device.
 
-## Pre-flash requirements for a future audited build — not current approval
+## Device testing status
 
-1. Confirm the phone is a **Redmi 7 / `onclite`**. From Fastboot, `fastboot getvar product` must identify `onclite`; do not use this ZIP on another Xiaomi model.
-2. Confirm the installed ROM really is MIUI Global `11.0.2.0(QFLMIXM)` / Android 10. This build is not established for other regions, ROMs, or Android versions.
-3. In recovery, make a backup of the current **Boot** partition and copy it off the phone. Separately keep the exact original firmware-matching `boot.img` on a PC and preserve a second copy. Verify the backup file with `sha256sum`; do not overwrite the only copy.
-4. Ensure recovery can access the backup and can install AnyKernel3-style update ZIPs. Keep battery charge and a working Fastboot path available.
-
-## Install status
-
-**Do not install the current `Redmi7_onclite_Kernel_Flashable.zip`.** The original image could not be inspected and exact source correspondence is unverified. No corrected ZIP is approved by this audit. Do not bypass the installer checks or flash the candidate as a test.
-
-## Rollback / bootloop
-
-- **Recovery still opens:** do not repeat the flash. Transfer the saved, firmware-matching original `boot.img` to recovery storage/USB-OTG. In TWRP/OrangeFox choose **Install Image**, select that image, choose the **Boot** target (not Recovery or DTBO), and restore it. Alternatively restore the recovery's saved Boot backup.
-- **Recovery unavailable, Fastboot works:** enter Fastboot, verify `fastboot getvar product` reports `onclite`, then from the PC run `fastboot flash boot /path/to/original-boot.img`. Do not substitute an image from another region/build, and do not erase userdata or flash other partitions.
-- Confirm the original image came from the installed Global `QFLMIXM` firmware/build and has the same device/partition generation. The GitHub Releases API reports the provided asset as 67,108,864 bytes with SHA-256 `cb110f4ff0f252af903a5c1adca5d49d8d33cc490afef529487f1d89fc6d2f30`; this was not independently recalculated here. After downloading, run `sha256sum boot.img` and compare before restoring. A stock, unpatched original boot image removes Magisk's boot patch: reapply Magisk using the Magisk app's supported **install to inactive/patch boot image** flow for that exact ROM, then verify root. If the saved boot image was already Magisk-patched, root may remain, but still test it.
-- Restoring boot cannot fix every possible failure (for example, a separate damaged partition or unrelated firmware issue). Stop if the product/partition does not match rather than trying guessed commands.
-
-## After a future audited flash — verification checklist
-
-- [ ] **Boot:** reaches the lock screen; test display, touch, storage, charging, Wi-Fi, camera, and other essential functions. If it bootloops, stop repeated attempts and roll back.
-- [ ] **Magisk:** open Magisk and inspect its installation/status page. Then use a trusted local terminal and run `su -c id`; approve the prompt and verify it prints `uid=0(root)`. The app icon alone is not proof of root.
-- [ ] **Kernel:** run `uname -a` / `uname -r`. The build intentionally keeps `4.9.186-perf-g131f907` as the release string for module vermagic, so that string alone cannot distinguish the new image from stock. Compare `/proc/version` build metadata and test the requested behavior as well.
-- [ ] **Module signature:** use only a trusted module built for this exact kernel/config and matching symbols/version. As root, attempt to load it and inspect `su -c 'dmesg | grep -iE "module|signature|verification|key|Unknown symbol|invalid module"'`. `Required key not available`/`Key was rejected` indicates signature enforcement/verification; `invalid module format`, vermagic mismatch, `Unknown symbol`, SELinux denials, and permission errors are different failures. With force enforcement disabled, unsigned modules and signatures lacking a trusted key can pass the policy check but may still be rejected for any of those other reasons. Cryptographically invalid signatures are still rejected by the verifier.
-
-No physical-device or module-load test has been performed by this build. Do not infer boot, root, or signature-test success until you perform these checks and report the results.
-
-## Reports and deliverables
-
-- [`BUILD_REPORT.md`](BUILD_REPORT.md): source/toolchain/config/build and verification record.
-- [`ZIP_MANIFEST.md`](ZIP_MANIFEST.md): concise archive contents.
-- [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md): AnyKernel3 and included utility notices.
-- Prior static candidate (**NOT FLASH-READY; do not install**): [`Redmi7_onclite_Kernel_Flashable.zip`](Redmi7_onclite_Kernel_Flashable.zip).
+No flashing, recovery execution, physical-device boot, AVB test, Magisk/root test, or module-load test occurred. There is no approved image for a phone test. Keep the original backup unchanged and separate; do not flash this ZIP. A future candidate would first need confirmed device/ROM identity, source/config and module-ABI review, a validated zero-ramdisk installation design that preserves the actual root arrangement, and an AVB plan that does not guess or silently disable verification. Only then would controlled device testing be appropriate.
