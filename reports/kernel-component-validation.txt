@@ -1,0 +1,215 @@
+{
+  "in_memory_synthetic_kernel_component_only": {
+    "boot_image_repacked": false,
+    "device_or_bootloader_tested": false,
+    "sha256": "453e518181748ec9517109875f41708d0dab809f775990222d79c2a758368081",
+    "size": 15193553,
+    "size_delta_vs_stock_component": -21250,
+    "tail_byte_identical": true,
+    "valid_fdt_count": 17,
+    "written_to_disk": false
+  },
+  "kernel_only_input": {
+    "arm64_image_magic_at_56": "ARMd",
+    "compressed_sha256": "e177c6841bc8150d9488b2fc80127c91b169a15f19be47d9467747d3a8af54d5",
+    "compressed_size": 11050592,
+    "decompressed_sha256": "3fa6e7c8c4cedea1dbab75750fba32d4c824b01ae83119191725efb9fa3d698e",
+    "decompressed_size": 28602880,
+    "gzip_eof": true,
+    "gzip_trailing_bytes": 0,
+    "path": "build-artifacts/onclite-kernel-only-stock-config/Image.gz"
+  },
+  "stock_appended_fdt_tail": {
+    "fdt_headers": [
+      {
+        "compatible": "qcom,apq8016-sbc|qcom,apq8016|qcom,sbc",
+        "model": "Qualcomm Technologies, Inc. APQ 8016 SBC",
+        "offset": 0,
+        "qcom_board_id_cells": [],
+        "qcom_msm_id_cells": [],
+        "size": 49586
+      },
+      {
+        "compatible": "qcom,sda450",
+        "model": "Qualcomm Technologies, Inc. SDA450 + PMI8950 SOC",
+        "offset": 49586,
+        "qcom_board_id_cells": [],
+        "qcom_msm_id_cells": [
+          "0x0000015f",
+          "0x00000000"
+        ],
+        "size": 271805
+      },
+      {
+        "compatible": "qcom,msm8953",
+        "model": "Qualcomm Technologies, Inc. MSM8953 + PMI8950 SOC",
+        "offset": 321391,
+        "qcom_board_id_cells": [],
+        "qcom_msm_id_cells": [
+          "0x00000125",
+          "0x00000000"
+        ],
+        "size": 273945
+      },
+      {
+        "compatible": "qcom,msm8996-mtp",
+        "model": "Qualcomm Technologies, Inc. MSM 8996 MTP",
+        "offset": 595336,
+        "qcom_board_id_cells": [],
+        "qcom_msm_id_cells": [],
+        "size": 15125
+      },
+      {
+        "compatible": "qcom,sdm450",
+        "model": "Qualcomm Technologies, Inc. SDM450 + PMI632 SOC",
+        "offset": 610461,
+        "qcom_board_id_cells": [],
+        "qcom_msm_id_cells": [
+          "0x00000152",
+          "0x00000000"
+        ],
+        "size": 368895
+      },
+      {
+        "compatible": "qcom,sda450",
+        "model": "Qualcomm Technologies, Inc. SDA450 + PMI632 SOC",
+        "offset": 979356,
+        "qcom_board_id_cells": [],
+        "qcom_msm_id_cells": [
+          "0x0000015f",
+          "0x00000000"
+        ],
+        "size": 368895
+      },
+      {
+        "compatible": "qcom,sdm450",
+        "model": "Qualcomm Technologies, Inc. SDM632 + PMI632 + PM8004 SOC",
+        "offset": 1348251,
+        "qcom_board_id_cells": [],
+        "qcom_msm_id_cells": [
+          "0x0000015d",
+          "0x00000000"
+        ],
+        "size": 367512
+      },
+      {
+        "compatible": "qcom,sdm450",
+        "model": "Qualcomm Technologies, Inc. SDM450 + PMI8937 SOC",
+        "offset": 1715763,
+        "qcom_board_id_cells": [],
+        "qcom_msm_id_cells": [
+          "0x00000152",
+          "0x00000000"
+        ],
+        "size": 268668
+      },
+      {
+        "compatible": "qcom,msm8953",
+        "model": "Qualcomm Technologies, Inc. MSM8953 + PMI8937 SOC",
+        "offset": 1984431,
+        "qcom_board_id_cells": [],
+        "qcom_msm_id_cells": [
+          "0x00000125",
+          "0x00000000"
+        ],
+        "size": 270808
+      },
+      {
+        "compatible": "qcom,msm8916-mtp|qcom,msm8916-mtp/1|qcom,msm8916|qcom,mtp",
+        "model": "Qualcomm Technologies, Inc. MSM 8916 MTP",
+        "offset": 2255239,
+        "qcom_board_id_cells": [],
+        "qcom_msm_id_cells": [],
+        "size": 43377
+      },
+      {
+        "compatible": "qcom,sdm450",
+        "model": "Qualcomm Technologies, Inc. SDM450 + PMI8940 SOC",
+        "offset": 2298616,
+        "qcom_board_id_cells": [],
+        "qcom_msm_id_cells": [
+          "0x00000152",
+          "0x00000000"
+        ],
+        "size": 271197
+      },
+      {
+        "compatible": "qcom,msm8953",
+        "model": "Qualcomm Technologies, Inc. MSM8953 + PMI8940 SOC",
+        "offset": 2569813,
+        "qcom_board_id_cells": [],
+        "qcom_msm_id_cells": [
+          "0x00000125",
+          "0x00000000"
+        ],
+        "size": 273337
+      },
+      {
+        "compatible": "qcom,msm8953",
+        "model": "Qualcomm Technologies, Inc. msm8953 + PMI632 SOC",
+        "offset": 2843150,
+        "qcom_board_id_cells": [],
+        "qcom_msm_id_cells": [
+          "0x00000125",
+          "0x00000000"
+        ],
+        "size": 371015
+      },
+      {
+        "compatible": "qcom,sdm450",
+        "model": "Qualcomm Technologies, Inc. SDM450 + PMI8950 SOC",
+        "offset": 3214165,
+        "qcom_board_id_cells": [],
+        "qcom_msm_id_cells": [
+          "0x00000152",
+          "0x00000000"
+        ],
+        "size": 271805
+      },
+      {
+        "compatible": "arrow,apq8096-db820c|qcom,apq8096-sbc",
+        "model": "Qualcomm Technologies, Inc. DB820c",
+        "offset": 3485970,
+        "qcom_board_id_cells": [],
+        "qcom_msm_id_cells": [],
+        "size": 16156
+      },
+      {
+        "compatible": "qcom,apq8053",
+        "model": "Qualcomm Technologies, Inc. APQ8053 + PMI8950 SOC",
+        "offset": 3502126,
+        "qcom_board_id_cells": [],
+        "qcom_msm_id_cells": [
+          "0x00000130",
+          "0x00000000"
+        ],
+        "size": 273969
+      },
+      {
+        "compatible": "qcom,sdm450",
+        "model": "Qualcomm Technologies, Inc. SDM632 + PMI632 SOC",
+        "offset": 3776095,
+        "qcom_board_id_cells": [],
+        "qcom_msm_id_cells": [
+          "0x0000015d",
+          "0x00000000"
+        ],
+        "size": 366866
+      }
+    ],
+    "sha256": "4a5fd265b67b34a535b3bda15bb88568948d80154da15eab1dfaf7cc70268ca5",
+    "size": 4142961,
+    "valid_fdt_count": 17
+  },
+  "stock_boot": {
+    "boot_header_version": 1,
+    "kernel_component_size": 15214803,
+    "page_size": 2048,
+    "path": "backups/original/boot.img",
+    "ramdisk_size": 0,
+    "sha256": "cb110f4ff0f252af903a5c1adca5d49d8d33cc490afef529487f1d89fc6d2f30",
+    "stock_gzip_member_size": 11071842,
+    "stock_image_size": 28606976
+  }
+}
+STATIC LAYOUT CHECK ONLY: no boot image or device partition was written.

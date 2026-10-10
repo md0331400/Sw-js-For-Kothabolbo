@@ -1,0 +1,66 @@
+#!/sbin/sh
+# Minimal recovery ZIP bootstrap for a prebuilt onclite boot image.
+# Protocol: recovery calls update-binary 3 <ui-fd> <zip-path>.
+OUTFD=$2
+ZIPFILE=$3
+FLASH_SCRIPT_SHA256=92c9cb2c9714dd7359167e0db7b56590cf08e71b328b50c2382e4bee99900015
+HELPER_SHA256=e1888e2e8201577992c503ee35a0d99f56da3c6cc04a72fdd17a92c568e91454
+
+ui_print() {
+  [ -n "$OUTFD" ] || return 1
+  printf 'ui_print %s\nui_print\n' "$*" >> "/proc/self/fd/$OUTFD"
+}
+
+abort() {
+  ui_print "ERROR: $*"
+  [ -n "$WORK" ] && rm -rf "$WORK"
+  exit 1
+}
+
+[ -n "$OUTFD" ] && [ -n "$ZIPFILE" ] || abort "Recovery updater arguments are missing."
+[ -f "$ZIPFILE" ] || abort "Recovery cannot read the installation ZIP."
+
+# Stage the 64 MiB candidate on user data rather than RAM-backed /tmp. This
+# also fails closed on sideload/recovery setups where persistent /data is not
+# mounted or decrypted.
+mounts=$(mount 2>/dev/null)
+data_source=$(printf '%s\n' "$mounts" | awk '$2 == "on" && $3 == "/data" { print $1; exit }')
+case "$data_source" in
+  /dev/block/*|/dev/mapper/*|/dev/dm-*) ;;
+  *) abort "Persistent block-backed /data is not mounted; unlock/decrypt and mount storage first.";;
+esac
+
+umask 077
+mkdir -p /data/local/tmp || abort "Persistent /data/local/tmp is unavailable."
+TMP_REAL=$(readlink -f /data/local/tmp 2>/dev/null)
+case "$TMP_REAL" in
+  /data/*) ;;
+  *) abort "Candidate staging path does not resolve inside persistent /data.";;
+esac
+WORK="/data/local/tmp/onclite-experimental-$$"
+[ ! -e "$WORK" ] && [ ! -L "$WORK" ] || abort "Temporary work path already exists."
+mkdir -p "$WORK/bin" || abort "Cannot create temporary work directory."
+
+# Recovery provides unzip to bootstrap its own bundled BusyBox, as the
+# existing AnyKernel package does. Subsequent archive reads use BusyBox.
+unzip -p "$ZIPFILE" tools/busybox > "$WORK/busybox" || abort "Could not extract the recovery BusyBox."
+chmod 755 "$WORK/busybox" || abort "Could not set BusyBox executable."
+"$WORK/busybox" --install -s "$WORK/bin" >/dev/null 2>&1 || abort "Could not install BusyBox applets."
+PATH="$WORK/bin:/sbin:/system/bin:/system/xbin:/bin"
+export PATH OUTFD ZIPFILE WORK
+
+unzip -p "$ZIPFILE" payload/boot.img > "$WORK/boot.img" || abort "Could not extract the prebuilt boot image."
+unzip -p "$ZIPFILE" installer/flash_prebuilt_boot.sh > "$WORK/flash_prebuilt_boot.sh" || abort "Could not extract the installer."
+unzip -p "$ZIPFILE" installer/prebuilt_boot_lib.sh > "$WORK/prebuilt_boot_lib.sh" || abort "Could not extract the tested write helper."
+chmod 755 "$WORK/flash_prebuilt_boot.sh" || abort "Could not stage the installer."
+flash_hash=$(sha256sum "$WORK/flash_prebuilt_boot.sh" 2>/dev/null | cut -d ' ' -f 1)
+helper_hash=$(sha256sum "$WORK/prebuilt_boot_lib.sh" 2>/dev/null | cut -d ' ' -f 1)
+[ "$flash_hash" = "$FLASH_SCRIPT_SHA256" ] || abort "Installer script SHA-256 mismatch."
+[ "$helper_hash" = "$HELPER_SHA256" ] || abort "Write helper SHA-256 mismatch."
+
+ui_print "Redmi 7 onclite experimental boot test"
+ui_print "This is not a release and boot acceptance is not guaranteed."
+"$WORK/bin/ash" "$WORK/flash_prebuilt_boot.sh" "$WORK/boot.img" "$WORK/prebuilt_boot_lib.sh"
+result=$?
+rm -rf "$WORK"
+exit "$result"

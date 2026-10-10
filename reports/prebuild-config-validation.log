@@ -1,0 +1,50 @@
+Fetching/validating Xiaomi source onc-q-oss at fa577bc566886db1e0dfb1ddf66ff7c528148b2b
+bc is missing; building pinned bc 7.1.0 in the temporary work directory
+Note: switching to '70c51d95e02d20fc3fc82791dc3f1aa0e9d47f0d'.
+
+You are in 'detached HEAD' state. You can look around, make experimental
+changes and commit them, and you can discard any commits you make in this
+state without impacting any branches by switching back to a branch.
+
+If you want to create a new branch to retain commits you create, you may
+do so (now or later) by using -c with the switch command. Example:
+
+  git switch -c <new-branch-name>
+
+Or undo this operation with:
+
+  git switch -
+
+Turn off this advice by setting config variable advice.detachedHead to false
+
+Configuring onc-perf_defconfig; restoring two stock-y settings omitted from the upstream defconfig
+make: Entering directory '/tmp/redmi7-onclite-kernel.UIdhz1AT/source'
+make[1]: Entering directory '/tmp/redmi7-onclite-kernel.UIdhz1AT/out'
+  HOSTCC  scripts/basic/fixdep
+  GEN     ./Makefile
+  HOSTCC  scripts/kconfig/conf.o
+  SHIPPED scripts/kconfig/zconf.tab.c
+  SHIPPED scripts/kconfig/zconf.lex.c
+  SHIPPED scripts/kconfig/zconf.hash.c
+  HOSTCC  scripts/kconfig/zconf.tab.o
+  HOSTLD  scripts/kconfig/conf
+#
+# configuration written to .config
+#
+make[1]: Leaving directory '/tmp/redmi7-onclite-kernel.UIdhz1AT/out'
+make: Leaving directory '/tmp/redmi7-onclite-kernel.UIdhz1AT/source'
+make: Entering directory '/tmp/redmi7-onclite-kernel.UIdhz1AT/source'
+make[1]: Entering directory '/tmp/redmi7-onclite-kernel.UIdhz1AT/out'
+  GEN     ./Makefile
+scripts/kconfig/conf  --olddefconfig Kconfig
+#
+# configuration written to .config
+#
+make[1]: Leaving directory '/tmp/redmi7-onclite-kernel.UIdhz1AT/out'
+make: Leaving directory '/tmp/redmi7-onclite-kernel.UIdhz1AT/source'
+Stock config: 5009 lines, sha256=db5eafdaab4c5d2739f74291e49971a6baf06ca1c196261ada7ca531dbb28bb3
+Generated config: 5007 lines, sha256=f3d8d3b08369b0c433e6e7106447df4176df010659537d50652a60f50547660e
+Recognized config delta: CONFIG_MODULE_SIG_FORCE stock=y, build=n
+Stock-only symbols unsupported by pinned Kconfig: CONFIG_KTRACE, CONFIG_RTMM
+Other stock config values match; pre-build config gate passed
+CONFIG_ONLY=1: pre-build config gate passed; no kernel image compiled.

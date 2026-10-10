@@ -1,0 +1,33 @@
+Diagnostic kernel-only build metadata
+Build UTC: 2026-10-10T07:45:25Z
+Source URL: https://github.com/MiCode/Xiaomi_Kernel_OpenSource.git
+Source branch: onc-q-oss
+Source commit: fa577bc566886db1e0dfb1ddf66ff7c528148b2b
+Defconfig: onc-perf_defconfig
+Patched defconfig blob: 17f3ac12890b1ff11ecc7a5fa16044ad8531f8ca
+Patch: /home/user/Sw-js-For-Kothabolbo/patches/0001-onclite-disable-module-signature-enforcement.patch
+Patch SHA-256: 03f340cbe3aa52968656d4b847f8948f39f4459e031356c2ed4faacf39f38fb9
+Toolchain URL: https://github.com/LineageOS/android_prebuilts_gcc_linux-x86_aarch64_aarch64-linux-android-4.9.git
+Toolchain branch: lineage-19.1
+Toolchain commit: 5e030eafe024784a73cdf47e6936ac0dbfc763dc
+Compiler: /tmp/redmi7-onclite-kernel.06U4nETY/toolchain/bin/aarch64-linux-android-gcc
+Compiler version: real-aarch64-linux-android-gcc (GCC) 4.9.x 20150123 (prerelease)
+Compiler dumpversion: 4.9.x
+Compiler target: aarch64-linux-android
+Compiler binary SHA-256: d6feb5d499457af0e4ed41d45e008e61dc69a6b644940686703f2e8386461049
+bc fallback commit: 70c51d95e02d20fc3fc82791dc3f1aa0e9d47f0d (used only if host bc was absent)
+Host: Linux 6.1.158+ #1 SMP PREEMPT_DYNAMIC Mon May 11 18:48:24 UTC 2026 x86_64 GNU/Linux
+Host GCC: gcc (Debian 12.2.0-14+deb12u1) 12.2.0
+GNU Make: GNU Make 4.3
+Build targets: onc-perf_defconfig; restore CONFIG_TASK_DELAY_ACCT=y and CONFIG_SOCKEV_NLMCAST=y from stock IKCONFIG; olddefconfig; Image.gz
+Stock boot used only for read-only config comparison: google_drive/boot.img
+Config delta gate: CONFIG_MODULE_SIG_FORCE stock=y, build=n; stock-only unsupported symbols CONFIG_KTRACE and CONFIG_RTMM
+Build command: make -C <pinned source> O=<temporary output> ARCH=arm64 CROSS_COMPILE=<pinned Android GCC 4.9 prefix> HOSTCC=gcc HOSTCFLAGS='-O2 -Wall -fcommon -I/usr/local/include/node' HOSTLDFLAGS=' -L/tmp/redmi7-onclite-kernel.06U4nETY/hostlib' HOST_LOADLIBES=' -L/tmp/redmi7-onclite-kernel.06U4nETY/hostlib' -j2 Image.gz
+Jobs: 2
+Kernel release: 4.9.186-perf-gfa577bc5-dirty
+vmlinux ELF machine: AArch64
+Image.gz bytes: 11050600
+Image.gz SHA-256: 255b8cf621055cc1ff48d256204f8690a6c9892047a40d0cb9cb2c838c23eb96
+Generated .config SHA-256: f3d8d3b08369b0c433e6e7106447df4176df010659537d50652a60f50547660e
+Output: build-artifacts/onclite-kernel-only-stock-config/Image.gz
+Packaging: none; no ZIP created

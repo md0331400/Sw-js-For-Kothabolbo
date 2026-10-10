@@ -1,0 +1,70 @@
+ONCLITE EXPERIMENTAL PREBUILT-BOOT TEST ZIP
+==========================================
+
+STATUS: TEST ONLY. NOT A RELEASE. NO DEVICE OR RECOVERY TEST HAS BEEN RUN.
+
+Target is Redmi 7 (codename onclite) only. Redmi Y3 (codename onc) is explicitly
+unsupported. This is a separate installer for a static prebuilt boot image; it
+does not modify the existing AnyKernel ZIP or its zero-ramdisk guard. It uses a
+legacy shell update-binary protocol and requires a compatible custom recovery
+that permits this unsigned test ZIP, supplies `unzip`/`getprop`, exposes the
+boot block node, and can run the packaged BusyBox applets. Stock-recovery
+compatibility is not established.
+
+ARTIFACT IDENTITY
+-----------------
+Candidate boot.img SHA-256:
+  684d5f2f29ee0dfeb9519a007be99594a8ba9af7c57c1734dec3b0fc06a0495c
+Candidate size: 67,108,864 bytes (64 MiB)
+Original boot SHA-256 required by the installer:
+  cb110f4ff0f252af903a5c1adca5d49d8d33cc490afef529487f1d89fc6d2f30
+Rebuilt Image.gz SHA-256:
+  255b8cf621055cc1ff48d256204f8690a6c9892047a40d0cb9cb2c838c23eb96
+
+The kernel was rebuilt from the pinned public Xiaomi onc-q-oss source and
+pinned toolchain/config, but the earlier Image.gz binary is unavailable for a
+byte comparison. The rebuild is 8 bytes larger than the previously recorded
+compressed artifact; the decompressed images have equal sizes but different
+SHA-256 values. This package does not claim an exact binary match or exact
+stock-source provenance. The differing embedded build timestamp is plausible
+but not proven as the cause.
+
+INSTALLER PREFLIGHT AND BACKUP
+------------------------------
+The recovery script refuses to write unless all checks pass:
+- recovery properties identify onclite (onc is rejected);
+- no unexpected A/B slot is reported;
+- a boot block path resolves unambiguously and is exactly 67,108,864 bytes;
+- the candidate image has its pinned size and SHA-256;
+- the current boot partition has the exact original SHA-256 above;
+- block-backed persistent /data is mounted and writable, with /data/media/0
+  available for the retained backup (allow roughly 128 MiB free for the staged
+  candidate and full backup); and
+- a full current-boot backup can be created and hash-verified at
+  /data/media/0/onclite-kernel-experimental-original-boot.img.
+
+A mismatched existing backup is never overwritten. The installer writes only
+the boot partition. It does not write, disable, or re-sign vbmeta. The helper
+checks boot read-back; on write or read-back failure it attempts to restore the
+verified original and verifies the restored bytes. If restore verification
+fails, stay in recovery and preserve the backup. A sudden power loss or a
+recovery/runtime failure can prevent automatic restore; keep a workable
+recovery/bootloader recovery path and the original image before any future
+physical test. No flashing or boot test was done for this package.
+
+AVB AND BOOT ACCEPTANCE
+-----------------------
+The candidate preserves the stock footer and embedded VBMeta bytes. The
+separate external vbmeta image is neither included nor modified; the
+candidate's body does NOT match the stock external boot descriptor digest.
+Generic AVB documentation describes potentially non-fatal verification errors
+in unlocked mode, but the user's reported unlocked state was not independently
+measured and does not establish this Redmi 7 bootloader's exact policy, active
+vbmeta/key, or acceptance. A verification warning, refusal, or non-boot is
+possible. Do not relock the bootloader. Do not treat this image as guaranteed
+to boot, root, load modules, or behave like the stock MIUI kernel.
+
+The package contains no stock firmware image, no vbmeta image, no kernel
+modules, and no MagiskBoot. It contains only the experimental candidate, the
+separate recovery bootstrap/helper, BusyBox, and this disclosure. Keep the
+original boot image and existing Redmi7_onclite_Kernel_Flashable.zip unchanged.

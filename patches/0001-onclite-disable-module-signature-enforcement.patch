@@ -1,0 +1,27 @@
+From: Redmi 7 onclite kernel build
+Subject: [PATCH] arm64: configs: onclite: allow unsigned modules
+
+Keep module signature verification enabled, but do not require every module
+loaded by the Redmi 7 kernel to have a trusted signature. The module loader
+continues to reject invalid signatures and all other module checks remain in
+place. The selected onc-perf_defconfig is supported by the stock embedded
+config and the onclite device-tree BoardConfig reference; it does not prove
+the exact MIUI source revision or physical device identity.
+
+---
+ arch/arm64/configs/onc-perf_defconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/arm64/configs/onc-perf_defconfig b/arch/arm64/configs/onc-perf_defconfig
+index 0464faefe4cd58d52f511e3cd2dfb5096eb45428..17f3ac12890b1ff11ecc7a5fa16044ad8531f8ca 100644
+--- a/arch/arm64/configs/onc-perf_defconfig
++++ b/arch/arm64/configs/onc-perf_defconfig
+@@ -48,7 +48,7 @@
+ CONFIG_MODULE_FORCE_UNLOAD=y
+ CONFIG_MODVERSIONS=y
+ CONFIG_MODULE_SIG=y
+-CONFIG_MODULE_SIG_FORCE=y
++# CONFIG_MODULE_SIG_FORCE is not set
+ CONFIG_MODULE_SIG_SHA512=y
+ # CONFIG_BLK_DEV_BSG is not set
+ CONFIG_PARTITION_ADVANCED=y

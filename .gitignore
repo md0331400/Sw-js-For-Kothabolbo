@@ -1,0 +1,8 @@
+# User-provided firmware backup: preserve locally, never publish it in Git.
+/backups/original/boot.img
+
+# Google Drive firmware images staged for inspection; retain locally, never publish.
+/google_drive/
+
+# Generated diagnostic kernel/config artifacts are local-only and not releasable ZIPs.
+/build-artifacts/

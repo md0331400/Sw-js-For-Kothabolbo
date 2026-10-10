@@ -1,0 +1,5 @@
+Redmi 7 (onclite) — MIUI Global Android 10 kernel
+
+Checks: onclite only; boot partition only; detected boot-image header.
+Reuses the live ramdisk and DTB; aborts if the expected DTB is missing.
+Back up boot first. Recovery-tested on hardware: NO (static checks only).

@@ -1,0 +1,20 @@
+Third-party notices for the experimental test ZIP
+
+Kernel payload
+--------------
+The kernel is built from MiCode/Xiaomi_Kernel_OpenSource, branch onc-q-oss,
+commit fa577bc566886db1e0dfb1ddf66ff7c528148b2b. Xiaomi's source tree is
+licensed under GPL-2.0 as recorded by its COPYING file. The build is diagnostic
+and does not claim that this public revision is the exact stock MIUI source.
+
+BusyBox
+-------
+The recovery BusyBox binary is copied unmodified from the preserved existing
+AnyKernel package. Its upstream notice/license is included as
+LICENSES/AnyKernel3-LICENSE.txt. The package builder checks the source ZIP hash
+before extracting this file. The existing ZIP itself is not modified.
+
+Installer
+---------
+The small recovery bootstrap and prebuilt-write helper in this test package
+are project scripts; they do not contain MagiskBoot or the AnyKernel3 core.

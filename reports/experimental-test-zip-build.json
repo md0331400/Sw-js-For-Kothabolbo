@@ -1,0 +1,15 @@
+{
+  "result": "TEST_ZIP_BUILT_AND_STATICALLY_VALIDATED_NOT_RECOVERY_OR_DEVICE_TESTED",
+  "path": "build-artifacts/onclite-experimental-test.zip",
+  "size_bytes": 12830146,
+  "sha256": "b742792c92b1f9135858dcddc6e12743781ee33da54fda3d04e905a5adea3462",
+  "entry_count": 13,
+  "candidate_boot_sha256": "684d5f2f29ee0dfeb9519a007be99594a8ba9af7c57c1734dec3b0fc06a0495c",
+  "original_boot_image_included": false,
+  "existing_release_zip_sha256_before_and_after": "58df6f662cce96d1106e406ecad30dc757027619ceb363d9d5fcd1ec013ae79f",
+  "external_avb_descriptor_mismatch_disclosed": true,
+  "zip_crc_and_entry_hash_validation": "passed",
+  "refuses_overwrite_existing_output": true,
+  "recovery_tested": false,
+  "physical_device_tested": false
+}
